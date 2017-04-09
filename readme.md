@@ -1,7 +1,8 @@
 # An address book in Python and Vue.js, using htmlPy
 
 > An implementation of building desktop applications using htmlPy, built for scotch.io
-** Python in this repo refers to Python3 **
+
+**Python in this repo refers to Python3 **
 
 ## Clone this repo 
 ``` bash
