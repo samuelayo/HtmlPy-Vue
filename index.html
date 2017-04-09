@@ -1,0 +1,128 @@
+<html>
+<link rel='stylesheet prefetch' href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css'>
+<link rel='stylesheet prefetch' href='https://cdn.datatables.net/1.10.13/css/jquery.dataTables.min.css'>
+
+
+<script src = "https://npmcdn.com/vue@2.2.5/dist/vue.js"></script>
+<body>
+  <div class="container" id="app">
+    <header>
+      <h1>Address Book</h1>
+      <hr />
+    </header>
+    <table id='table1' class="table table-bordered">
+      <thead>
+        <tr>
+          <th>First Name</th>
+          <th>Last Name</th>
+          <th>Phone</th>
+          <th>Notes</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+          {% raw %}
+          <tr v-for="con in contacts">
+          <td>
+            {{con[1]}}
+          </td>
+          <td>
+            {{con[2]}}
+          </td>
+          <td>
+           {{con[3]}}
+          </td>
+          <td>
+            {{con[4]}}
+          </td>
+          <td>
+            <div class="text-center">
+              <button id='add' class='btn btn-danger' @click = "removeContact(con[0])" />Remove</button>
+            </div>
+          </td>
+        </tr>
+        {% endraw %}
+      </tbody>
+      <tfoot>
+          
+        <tr>
+          <td>
+            <input v-model='firstname' class='form-control' type="text" />
+          </td>
+          <td>
+            <input v-model='lastname' class='form-control' type="text" />
+          </td>
+          <td>
+            <input v-model='phone' class='form-control' type="text" />
+          </td>
+          <td>
+            <textarea v-model='notes' class='form-control'></textarea>
+          </td>
+          <td>
+            <div class="text-center">
+              <button @click="addContacts" id='add' class='btn btn-block' />Add</button>
+            </div>
+          </td>
+        </tr>
+      </tfoot>
+    </table>
+  </div>
+</body>
+
+</html>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.13/js/jquery.dataTables.min.js"></script>
+<script>
+    
+   
+var app = new Vue({
+    el: '#app',
+    data: {
+        contacts: {{contacts}},
+        firstname: '',
+        lastname: '',
+        phone: '',
+        notes:''
+    }, 
+    created: function(){
+        
+        setTimeout(function(){
+             $("#table1").DataTable();
+        }, 100)
+       
+    },
+    methods: {
+        addContacts: function (){
+            var add_new = BackEnd.add_contact(JSON.stringify({
+                firstname: this.firstname,
+                lastname: this.lastname,
+                phone: this.phone,
+                notes: this.notes
+            }));
+            this.contacts = JSON.parse(add_new);
+            this.firstname = '';
+            this.lastname = '';
+            this.phone = '';
+            this.notes = '';
+            $('#table1').DataTable().destroy();
+            setTimeout(function(){
+                
+            $("#table1").DataTable();
+            }, 100)
+        },
+        removeContact: function(id){
+          var delete_one = BackEnd.delete_contact(JSON.stringify({
+                id: id
+            }));
+
+            this.contacts = JSON.parse(delete_one);
+            $('#table1').DataTable().destroy();
+            setTimeout(function(){
+            
+             $("#table1").DataTable();
+            }, 100)
+        }
+    }
+})
+
+</script>
